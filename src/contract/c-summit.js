@@ -60,7 +60,7 @@ If your solution is an empty string, you must leave the text box empty. Do not u
 /** @param {NS} ns */
 export async function main(ns) {
     let n = 68;
-    let results = new Array(n+1);
+    let results = new Array(n+1); // arr[i] = how many ways to write i as a sum
     for (let i = 0; i < n+1; i++) {
         results[i] = 0;
     }
