@@ -1,0 +1,250 @@
+API BREAK INFO FOR 3.0.0
+
+You cannot use the deprecated VSCode extension to connect to the Steam app via API server now. You have to use Remote API to connect your external editors to Bitburner.
+For more information, please check the Remote API page in the Documentation tab. If you have a question, please ask us on #external-editors on Discord (https://discord.gg/TFc3hKD).
+
+
+
+With some APIs, when you passed values to their params, you could pass a value that was not an exact match. For example, with ns.singularity.commitCrime, you could pass "Rob Store", "rob store", "RobStore", "robstore", "robStore", etc. This is called "fuzzy matching". Now, you must pass an exact value (i.e., Rob Store). This change affects:
+- Bladeburner action and type: BladeburnerActionType, BladeburnerGeneralActionName, BladeburnerContractName, BladeburnerOperationName, BladeburnerBlackOpName, SpecialBladeburnerActionTypeForSleeve, BladeburnerActionTypeForSleeve.
+- Crime: CrimeType
+- Faction work: FactionWorkType
+- University class: UniversityClassType
+- Gym stat: GymType
+- Job field: JobField
+- Stock position: PositionType
+- Stock order: OrderType
+You can access these values via ns.enums and Bladeburner APIs.
+
+
+
+ns.nuke, ns.brutessh, ns.ftpcrack, ns.relaysmtp, ns.httpworm, and ns.sqlinject now do not throw an error when you do not have the required .exe file or enough opened ports.
+This should not be a problem with most scripts. However, if you were catching errors and branching on the result of success/failure, you will need to use the return value instead.
+
+Usage of the following functions may have been affected:
+ns.nuke
+ns.brutessh
+ns.ftpcrack
+ns.relaysmtp
+ns.httpworm
+ns.sqlinject
+
+Potentially affected files on server home (with line numbers):
+deployer.js: (Line numbers: 29, 32, 35, 38, 41, 43)
+deployer2.js: (Line numbers: 52, 56, 60, 64, 68, 70, 95, 99, 103, 107, 111, 113)
+deployer3.js: (Line numbers: 58, 61, 64, 67, 70, 72, 136, 140, 144, 148, 152, 154)
+prep.js: (Line numbers: 18, 21, 24, 27, 30, 32)
+deployer-pserv.js: (Line numbers: 52, 56, 60, 64, 68, 70)
+
+Potentially affected files on server pserv-1 (with line numbers):
+prep.js: (Line numbers: 18, 21, 24, 27, 30, 32)
+
+Potentially affected files on server pserv-2 (with line numbers):
+prep.js: (Line numbers: 18, 21, 24, 27, 30, 32)
+
+Potentially affected files on server pserv-3 (with line numbers):
+prep.js: (Line numbers: 18, 21, 24, 27, 30, 32)
+
+Potentially affected files on server pserv-4 (with line numbers):
+prep.js: (Line numbers: 18, 21, 24, 27, 30, 32)
+
+Potentially affected files on server pserv-5 (with line numbers):
+prep.js: (Line numbers: 18, 21, 24, 27, 30, 32)
+
+
+
+Some APIs returned a default value when you passed the hostname of a non-hackable server (e.g., hacknet server) to them.
+These APIs now throw an error. The affected APIs are:
+- ns.hackAnalyzeThreads
+- ns.hackAnalyze
+- ns.hackAnalyzeSecurity
+- ns.hackAnalyzeChance
+- ns.growthAnalyze
+- ns.growthAnalyzeSecurity
+- ns.nuke
+- ns.brutessh
+- ns.ftpcrack
+- ns.relaysmtp
+- ns.httpworm
+- ns.sqlinject
+- ns.getServerMoneyAvailable
+- ns.getServerSecurityLevel
+- ns.getServerBaseSecurityLevel
+- ns.getServerMinSecurityLevel
+- ns.getServerRequiredHackingLevel
+- ns.getServerMaxMoney
+- ns.getServerGrowth
+- ns.getServerNumPortsRequired
+- ns.cloud.deleteServer
+- ns.getHackTime
+- ns.getGrowTime
+- ns.getWeakenTime
+
+
+Usage of the following functions may have been affected:
+ns.hackAnalyzeThreads
+ns.hackAnalyze
+ns.hackAnalyzeSecurity
+ns.hackAnalyzeChance
+ns.growthAnalyze
+ns.growthAnalyzeSecurity
+ns.nuke
+ns.brutessh
+ns.ftpcrack
+ns.relaysmtp
+ns.httpworm
+ns.sqlinject
+ns.getServerMoneyAvailable
+ns.getServerSecurityLevel
+ns.getServerBaseSecurityLevel
+ns.getServerMinSecurityLevel
+ns.getServerRequiredHackingLevel
+ns.getServerMaxMoney
+ns.getServerGrowth
+ns.getServerNumPortsRequired
+ns.deleteServer
+ns.getHackTime
+ns.getGrowTime
+ns.getWeakenTime
+
+Potentially affected files on server home (with line numbers):
+script1.js: (Line numbers: 9, 14, 18, 21)
+deployer.js: (Line numbers: 24, 29, 32, 35, 38, 41, 43)
+scanner.js: (Line numbers: 11, 11, 12, 12)
+deployer2.js: (Line numbers: 20, 20, 21, 22, 22, 23, 23, 24, 26, 48, 52, 56, 60, 64, 68, 70, 84, 95, 99, 103, 107, 111, 113)
+monitor.js: (Line numbers: 35, 36, 43, 45)
+analyze.js: (Line numbers: 5, 5, 6, 7, 7, 8, 8, 9, 11)
+deployer3.js: (Line numbers: 23, 25, 25, 58, 61, 64, 67, 70, 72, 93, 100, 100, 101, 102, 102, 103, 103, 104, 106, 125, 136, 140, 144, 148, 152, 154)
+purchase-server.js: (Line number: 31)
+batch.js: (Line numbers: 10, 10, 10, 10, 25, 32, 33, 39, 39, 40, 40)
+prep.js: (Line numbers: 14, 18, 21, 24, 27, 30, 32, 48, 48, 48, 48)
+bgrow.js: (Line number: 18)
+bmonitor.js: (Line numbers: 19, 19, 20, 20)
+bhack.js: (Line number: 18)
+bweaken.js: (Line number: 18)
+deployer-pserv.js: (Line numbers: 20, 20, 21, 22, 22, 23, 23, 24, 26, 48, 52, 56, 60, 64, 68, 70)
+
+Potentially affected files on server pserv-1 (with line numbers):
+prep.js: (Line numbers: 14, 18, 21, 24, 27, 30, 32, 44, 44, 47, 47, 51, 51, 51, 51, 52, 52)
+
+Potentially affected files on server pserv-2 (with line numbers):
+prep.js: (Line numbers: 14, 18, 21, 24, 27, 30, 32, 44, 44, 47, 47, 51, 51, 51, 51, 52, 52)
+
+Potentially affected files on server pserv-3 (with line numbers):
+prep.js: (Line numbers: 14, 18, 21, 24, 27, 30, 32, 44, 44, 47, 47, 51, 51, 51, 51, 52, 52)
+
+Potentially affected files on server pserv-4 (with line numbers):
+prep.js: (Line numbers: 14, 18, 21, 24, 27, 30, 32, 44, 44, 47, 47, 51, 51, 51, 51, 52, 52)
+
+Potentially affected files on server pserv-5 (with line numbers):
+prep.js: (Line numbers: 14, 18, 21, 24, 27, 30, 32, 44, 44, 47, 47, 51, 51, 51, 51, 52, 52)
+
+
+
+The cloud server (purchased server) functions have been moved to their own interface, ns.cloud.
+"ns.getPurchasedServerCost()" was removed.
+It has been automatically replaced with "ns.cloud.getServerCost()"
+
+"ns.purchaseServer()" was removed.
+It has been automatically replaced with "ns.cloud.purchaseServer()"
+
+"ns.getPurchasedServerUpgradeCost()" was removed.
+It has been automatically replaced with "ns.cloud.getServerUpgradeCost()"
+
+"ns.upgradePurchasedServer()" was removed.
+It has been automatically replaced with "ns.cloud.upgradeServer()"
+
+"ns.renamePurchasedServer()" was removed.
+It has been automatically replaced with "ns.cloud.renameServer()"
+
+"ns.deleteServer()" was removed.
+It has been automatically replaced with "ns.cloud.deleteServer()"
+
+"ns.getPurchasedServers()" was removed.
+It has been automatically replaced with "ns.cloud.getServerNames()"
+
+"ns.getPurchasedServerLimit()" was removed.
+It has been automatically replaced with "ns.cloud.getServerLimit()"
+
+"ns.getPurchasedServerMaxRam()" was removed.
+It has been automatically replaced with "ns.cloud.getRamLimit()"
+
+Usage of the following functions may have been affected:
+ns.getPurchasedServerCost
+ns.purchaseServer
+ns.getPurchasedServerUpgradeCost
+ns.upgradePurchasedServer
+ns.renamePurchasedServer
+ns.deleteServer
+ns.getPurchasedServers
+ns.getPurchasedServerLimit
+ns.getPurchasedServerMaxRam
+
+Potentially affected files on server home (with line numbers):
+rename-purchased-servers.js: (Line numbers: 3, 5)
+share.js: (Line number: 5)
+stop-share.js: (Line number: 4)
+purchase-server.js: (Line numbers: 11, 11, 17, 20, 22, 29, 31, 37)
+t.js: (Line numbers: 3, 3, 4, 4, 5)
+deployer-pserv.js: (Line number: 78)
+
+
+
+We added a new feature called Dark Net. The "darkweb" server is a darknet server now.
+Some APIs that require the target host to be a normal server do not work with darkweb. This should not be a 
+problem with most scripts. The most potentially affected API is "ns.scan()". Darkweb does not appear in the 
+result of this API anymore. If you want to find darknet servers, you need to use "ns.dnet.probe()".
+
+
+
+ns.cloud.purchaseServer() and ns.cloud.deleteServer() previously removed whitespace from the provided hostname inconsistently.
+They now use the hostname as provided.
+
+Usage of the following functions may have been affected:
+ns.cloud.purchaseServer
+ns.cloud.deleteServer
+
+Potentially affected files on server home (with line numbers):
+purchase-server.js: (Line number: 37)
+
+
+
+If you pass a string to ns.codingcontract.attempt() for contracts that require a non-string answer, the
+game will convert that string to the expected format. This string conversion was inconsistent and had many
+undocumented behaviors. Now the rules are consistent and well-documented. Please check the "Coding Contracts"
+page for more information.
+There are 7 contracts that are affected by this change:
+- Find All Valid Math Expressions
+- Generate IP Addresses
+- Largest Rectangle in a Matrix
+- Merge Overlapping Intervals
+- Proper 2-Coloring of a Graph
+- Sanitize Parentheses in Expression
+- Spiralize Matrix
+Note that this change only affects the string conversion. The solution format of these contracts is an array,
+so if you pass the solution, which is an array, as is, you will not have any problems.
+If your code converts the array to a string, you should check these contracts, especially the "Sanitize
+Parentheses in Expression" contract and others that require a string array.
+- Sanitize Parentheses in Expression: Previously, if you passed an empty string to this contract, it was
+converted to an array containing an empty string. Now, it's converted to an empty array.
+- Read the "General rules", "String conversion", and "Tips" sections on the "Coding Contracts" page carefully.
+
+Usage of the following functions may have been affected:
+ns.codingcontract.attempt
+FindAllValidMathExpressions
+GenerateIPAddresses
+LargestRectangleInAMatrix
+MergeOverlappingIntervals
+Proper2ColoringOfAGraph
+SanitizeParenthesesInExpression
+SpiralizeMatrix
+Find All Valid Math Expressions
+Generate IP Addresses
+Largest Rectangle in a Matrix
+Merge Overlapping Intervals
+Proper 2-Coloring of a Graph
+Sanitize Parentheses in Expression
+Spiralize Matrix
+
+Potentially affected files on server home (with line numbers):
+contract.js: (Line numbers: 38, 42, 72, 228)
