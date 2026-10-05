@@ -1,46 +1,53 @@
 /** @param {NS} ns */
+/*
+Basic bulk weaken/grow/hack script deployer that naively throws compute power at the highest 3 targets
+
+Incomplete
+*/
+
 export async function main(ns) {
     const DEBUG = false;
-    const maxTargets = 3;
-
-    const weaken = "weaken.js";
-    const grow = "grow.js";
-    const hack = "hack.js"; // each 1.75 gb
-    let servers = new Map();
-    let workers = [];
+    const MAX_TARGETS = 3;
+    const WEAKEN = "weaken.js";
+    const GROW = "grow.js";
+    const HACK = "hack.js"; 
+    const SCRIPT_RAM_COST = 1.75;
+    // maxPorts not const bc gets modified while program is running
     let maxPorts = ns.fileExists("SQLInject.exe")
                     + ns.fileExists("HTTPWorm.exe")
                     + ns.fileExists("relaySMTP.exe")
                     + ns.fileExists("FTPCrack.exe")
                     + ns.fileExists("BruteSSH.exe");
+    let servers = new Map();
+    let workers = [];
     let totalThreads = 0;
 
-    // initialize server data into servers Map and prep servers that we can use
+    // initialize server data into servers Map and prep servers that we can use using BFS
     let neighbors = ["home"];
     while (neighbors.length != 0) {
         let host = neighbors.pop();
         if (!servers.has(host)) {
-            let numPorts = ns.getServerNumPortsRequired(host);
-            let numThreads = Math.floor(ns.getServerMaxRam(host)/1.75);
-            servers.set(host, {ports: numPorts, lvl: ns.getServerRequiredHackingLevel(host), money: ns.getServerMaxMoney(host), threads: numThreads});
             ns.print(`Found ${host}`);
+            let numPorts = ns.getServerNumPortsRequired(host);
+            let numThreads = Math.floor(ns.getServerMaxRam(host) / SCRIPT_RAM_COST);
+            servers.set(host, {ports: numPorts, lvl: ns.getServerRequiredHackingLevel(host), money: ns.getServerMaxMoney(host), threads: numThreads});
             
             if (numPorts > maxPorts && host != "home") {
                 ns.print(`Too many required ports: ${numPorts} > ${maxPorts}`);
                 continue;
             }
 
-            
-
             neighbors = neighbors.concat(ns.scan(host));
         }
     }
 
+    // readjust HOME threads to 99%, leave some room for manual scripts
     servers.get("home").threads = Math.floor(0.99 * servers.get("home").threads);
         
     let prevMaxPorts = 0;
     let prevTargets = new Map();
 
+    // main loop
     while (true) {
         maxPorts = ns.fileExists("SQLInject.exe")
                     + ns.fileExists("HTTPWorm.exe")
@@ -90,8 +97,9 @@ export async function main(ns) {
         for (const [target, data] of targets) {
             if (!prevTargets.has(target)) {
                 let growThreads = [];
-                for (let i = 0; i < ns.getGrowTime(target))
-                    growThreads.push(ns.exec(grow, ));
+                for (let i = 0; i < ns.getGrowTime(target); i++){
+                    growThreads.push(ns.exec(GROW, ));
+                }
                 // need to figure out setting up threads, communicating w them, scaling them, and destroying them when changing targets
             }
         }
