@@ -1,7 +1,11 @@
 /** @param {NS} ns */
+/*
+Child process that executes `hack` on target server to finish at a specified end time
+*/
+
 export async function main(ns) {
-    if (ns.args.length != 4) {
-        ns.tprint(`missing args target, end time, duration, port: ${args}`);
+    if (ns.args.length != 5) {
+        ns.tprint(`Usage: run bhack.js <target> <end time> <duration> <port> <batch num>`);
         ns.exit();
     }
 
@@ -9,13 +13,16 @@ export async function main(ns) {
     const endTime = ns.args[1];
     const duration = ns.args[2];
     const port = ns.args[3];
+    const batchNum = ns.args[4];
 
     const calculatedDelay = endTime - duration - Date.now();
     const money = await ns.hack(target, {additionalMsec: calculatedDelay});
+    
     const msg = {
         name: "hack",
         money: money,
-        security: ns.getServerSecurityLevel(ns.args[0]),
+        batchNum: batchNum,
+        // security: ns.getServerSecurityLevel(ns.args[0]),
         timeCompleted: Date.now(),
         timeDiff: Date.now() - endTime
     }
