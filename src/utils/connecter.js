@@ -25,15 +25,20 @@ export async function main(ns) {
         }
     }
 
-    ns.tprint(servers);
+    ns.tprint("Finished scanning servers");
+    ns.print(servers);
 
     let cmd = `connect ${target}`;
     let prev = servers.get(target);
+    if (prev == null) {
+        ns.tprint(`${target} is not a valid server, found ${servers.keys()}`);
+        ns.exit();
+    }
     while (prev != "") {
-        ns.tprint(`Found ${prev}`);
+        ns.print(`Found ${prev}`);
         cmd = `connect ${prev}; `.concat(cmd);
         prev = servers.get(prev);
     }
 
-    ns.tprint(cmd);
+    ns.tprint(`Connect command:\n${cmd}`);
 }
