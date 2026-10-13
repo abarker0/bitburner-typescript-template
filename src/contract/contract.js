@@ -5,6 +5,8 @@ export async function main(ns) {
     let contracts = 0;
     let completed = 0;
     let failed = 0;
+    let unknownContracts = new Set();
+    let failedContracts = new Set();
 
     while (neighbors.length != 0) {
         let host = neighbors.pop();
@@ -64,6 +66,7 @@ export async function main(ns) {
                             
                         } else {
                             ns.print(`${contract.description}`);
+                            unknownContracts.add(contract.type);
                             ns.print(`------------------------------------------------------------------`);
                             continue;
                         }
@@ -73,6 +76,7 @@ export async function main(ns) {
                         if (success == "") {
                             ns.print(`Unsuccessful attempt: ${contract.numTriesRemaining()} tries left`);
                             failed++;
+                            failedContracts.add(contract.type);
                         } else {
                             ns.print(`Success: ${success}`);
                             completed++;
@@ -88,6 +92,12 @@ export async function main(ns) {
     }
 
     ns.tprint(`Found ${contracts} contracts: solved ${completed} with ${failed} failures`);
+    if (failedContracts.size != 0) {
+        ns.tprint(`Failed contracts: ${[...failedContracts].sort()}`);
+    }
+    if (unknownContracts.size != 0) {
+        ns.tprint(`Unknown contracts: ${[... unknownContracts].sort()}`);
+    }
 }
 
 function uniquePaths1(maxRows, maxCols) {
