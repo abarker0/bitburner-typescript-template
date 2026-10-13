@@ -1,7 +1,8 @@
 /** @param {NS} ns */
+const SHARE_WORKER_SCRIPT = "utils/share-worker.js";
+
 export async function main(ns) {
-    
-    const servers = [];
+    let servers = [];
     for (let i = 0; i < ns.cloud.getServerNames().length; i++) {
         servers.push(`pserv-${i}`);
     }
@@ -15,10 +16,10 @@ export async function main(ns) {
     ns.tprint(`Sharing memory on ${numSharers} servers`);
 
     for (let server of servers) {
-        const threads = Math.floor((ns.getServerMaxRam(server) - ns.getServerUsedRam(server)) / ns.getScriptRam("share-worker.js"));
+        const threads = Math.floor((ns.getServerMaxRam(server) - ns.getServerUsedRam(server)) / ns.getScriptRam(SHARE_WORKER_SCRIPT));
         if (threads == 0) continue;
-        ns.scp("share-worker.js", server);
-        ns.exec("share-worker.js", server, threads);
+        ns.scp(SHARE_WORKER_SCRIPT, server);
+        ns.exec(SHARE_WORKER_SCRIPT, server, threads);
     }
 
 }
