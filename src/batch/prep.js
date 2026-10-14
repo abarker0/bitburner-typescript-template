@@ -1,4 +1,7 @@
 /** @param {NS} ns */
+const GROW_SCRIPT = "/batch/grow.js"
+const WEAKEN_SCRIPT = "/batch/weaken.js"
+
 export async function main(ns) {
     if (ns.args.length != 2 && ns.args.length != 3) {
         ns.tprint(`Usage: run prep.js <target> <host> <?return port>`);
@@ -48,13 +51,22 @@ export async function main(ns) {
 
     // run infinite loop weaken/grow threads against target
     let threads = Math.floor((ns.getServerMaxRam(host) - ns.getServerUsedRam(host))/1.75);
-    ns.scp("weaken.js", host, "home");
-    let weakens = ns.exec("weaken.js", host, Math.floor(0.5*threads), target, 0);
-    ns.scp("grow.js", host, "home");
-    let grows = ns.exec("grow.js", host, Math.floor(0.5*threads), target, 0);
+    // ns.scp(WEAKEN_SCRIPT, host, "home");
+    let weakens = ns.exec(WEAKEN_SCRIPT, host, Math.floor(0.5*threads), target, 0);
+    // ns.scp(GROW_SCRIPT, host, "home");
+    let grows = ns.exec(GROW_SCRIPT, host, Math.floor(0.5*threads), target, 0);
+
+    if (weakens == 0 || grows == 0) {
+        ns.tprint(`Failed to run grow/weaken scripts`);
+        ns.exit();
+    }
 
     // wait until infinite loop threads max security and money then kill
     while (ns.getServerSecurityLevel(target) != ns.getServerMinSecurityLevel(target) || ns.getServerMoneyAvailable(target) != ns.getServerMaxMoney(target)) {
+        let securityDiff = ns.getServerSecurityLevel(target) - ns.getServerMinSecurityLevel(target);
+        let moneyDiff = ns.getServerMaxMoney(target) - ns.getServerMoneyAvailable(target);
+        ns.print(`Current security diff: ${securityDiff}`);
+        ns.print(`Current money diff: ${moneyDiff}`);
         await ns.sleep(10000);
     }
     ns.kill(weakens);
